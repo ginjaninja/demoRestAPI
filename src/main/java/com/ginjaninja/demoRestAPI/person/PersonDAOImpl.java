@@ -1,7 +1,10 @@
 package com.ginjaninja.demoRestAPI.person;
 
+import java.util.Collection;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +17,12 @@ public class PersonDAOImpl {
 	
 	public Person get(Long id) {
 		return this.entityManager.find(Person.class, id);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Collection<Person> getAll() {
+		Query query = entityManager.createQuery("SELECT p from Person p");
+		return query.getResultList();
 	}
 	
 	public Person save(Person person) {

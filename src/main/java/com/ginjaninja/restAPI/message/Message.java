@@ -8,17 +8,17 @@ public class Message {
 	}
 	
 	private String message;
-	private final Type type;
+	private final Type status;
 	private final Serializable result;
 	
-	public Message(Type type, String message){
-		this.type = type;
+	public Message(Type status, String message){
+		this.status = status;
 		this.message = message;
 		this.result = null;
 	}
 	
-	public Message(Type type, String message, Serializable result){
-		this.type = type;
+	public Message(Type status, String message, Serializable result){
+		this.status = status;
 		this.message = message;
 		this.result = result;
 	}
@@ -31,8 +31,8 @@ public class Message {
 		this.message = message;
 	}
 
-	public Type getType() {
-		return type;
+	public Type getStatus() {
+		return status;
 	}
 
 	public Object getResult() {

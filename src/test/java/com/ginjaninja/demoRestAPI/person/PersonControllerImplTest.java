@@ -1,5 +1,6 @@
 package com.ginjaninja.demoRestAPI.person;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -14,9 +15,36 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ginjaninja.demoRestAPI.config.WebAppConfigurationAware;
 
-
 public class PersonControllerImplTest extends WebAppConfigurationAware {
 	
+	@Test
+	public void testGet() throws Exception{
+		MvcResult result = mockMvc.perform(get("/person/1"))
+			.andDo(print())
+			.andExpect(status().isOk())
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testGetError() throws Exception{
+		MvcResult result = mockMvc.perform(get("/person/133"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status", is("ERROR")))
+			.andExpect(jsonPath("$.message", is("No results found")))
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testGetAll() throws Exception{
+		MvcResult result = mockMvc.perform(get("/person"))
+			.andDo(print())
+			.andExpect(status().isOk())
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
 	
 	@Test
 	public void testSave() throws JsonProcessingException, Exception {

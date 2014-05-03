@@ -1,19 +1,21 @@
 package com.ginjaninja.demoRestAPI.person;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ch.qos.logback.core.subst.Token.Type;
-
-import com.ginjaninja.restAPI.dao.GenericDAO;
 import com.ginjaninja.restAPI.message.Message;
 
 @Controller
@@ -23,13 +25,30 @@ public class PersonController {
 	PersonDAOImpl personDAO;
 	//GenericDAO<Person, Long> personDAO;
 	
-	/*
-	@RequestMapping(method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE, 
-			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Map>
-	*/
+	public ResponseEntity<Message> getAll(){
+		Message message;
+		People people = new People(personDAO.getAll());
+		message = new Message(Message.Type.SUCCESS, "OK", people);
+		return new ResponseEntity<Message>(message, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Message> get(@PathVariable Long id){
+		Message message;
+		Person person = personDAO.get(id);
+		if(person == null){
+			message = new Message(Message.Type.ERROR, "No results found");
+			return new ResponseEntity<Message>(message, HttpStatus.OK);
+		}else{
+			message = new Message(Message.Type.SUCCESS, "OK", person);
+			return new ResponseEntity<Message>(message, HttpStatus.OK);
+		}
+	}
+	
 	
 	@RequestMapping(method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE, 
@@ -43,11 +62,11 @@ public class PersonController {
 		}
 		personDAO.save(person);
 		
-		if(person.getId() != null){
-			message = new Message(Message.Type.SUCCESS, "OK", person);
+		if(person.getId() == null){
+			message = new Message(Message.Type.ERROR, "Could not save person");
 			return new ResponseEntity<Message>(message, HttpStatus.OK);
 		}else{
-			message = new Message(Message.Type.ERROR, "Could not save person");
+			message = new Message(Message.Type.SUCCESS, "OK", person);
 			return new ResponseEntity<Message>(message, HttpStatus.OK);
 		}
 		
