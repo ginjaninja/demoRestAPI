@@ -1,4 +1,4 @@
-package com.ginjaninja.restAPI.home;
+package com.ginjaninja.demoRestAPI.home;
 
 import org.junit.Test;
 

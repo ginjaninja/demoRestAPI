@@ -1,9 +1,5 @@
 package com.ginjaninja.demoRestAPI.person;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,14 +18,13 @@ import com.ginjaninja.restAPI.message.Message;
 @RequestMapping(value={"person"})
 public class PersonController {
 	@Autowired
-	PersonDAOImpl personDAO;
-	//GenericDAO<Person, Long> personDAO;
+	PersonService personService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Message> getAll(){
 		Message message;
-		People people = new People(personDAO.getAll());
+		People people = new People(personService.getAll());
 		message = new Message(Message.Type.SUCCESS, "OK", people);
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 		
@@ -39,9 +34,9 @@ public class PersonController {
 	@ResponseBody
 	public ResponseEntity<Message> get(@PathVariable Long id){
 		Message message;
-		Person person = personDAO.get(id);
+		Person person = personService.get(id);
 		if(person == null){
-			message = new Message(Message.Type.ERROR, "No results found");
+			message = new Message(Message.Type.ERROR, "Person not found");
 			return new ResponseEntity<Message>(message, HttpStatus.OK);
 		}else{
 			message = new Message(Message.Type.SUCCESS, "OK", person);
@@ -60,7 +55,7 @@ public class PersonController {
 			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
 			return new ResponseEntity<Message>(message, HttpStatus.BAD_REQUEST);
 		}
-		personDAO.save(person);
+		personService.save(person);
 		if(person.getId() == null){
 			message = new Message(Message.Type.ERROR, "Could not save person");
 			return new ResponseEntity<Message>(message, HttpStatus.OK);
@@ -80,7 +75,7 @@ public class PersonController {
 			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
 			return new ResponseEntity<Message>(HttpStatus.BAD_REQUEST);
 		}
-		personDAO.update(person);
+		personService.update(person);
 		if(person.getId() == null){
 			message = new Message(Message.Type.ERROR, "Could not update person");
 			return new ResponseEntity<Message>(message, HttpStatus.OK);
@@ -90,26 +85,10 @@ public class PersonController {
 		}
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE,
-			produces = MediaType.APPLICATION_JSON_VALUE, 
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public ResponseEntity<Message> delete(@RequestBody final Person person, BindingResult bindingResult){
-		Message message;
-		if(bindingResult.hasErrors()){
-			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
-			return new ResponseEntity<Message>(HttpStatus.BAD_REQUEST);
-		}
-		personDAO.delete(person);
-		message = new Message(Message.Type.SUCCESS, "OK");
-		return new ResponseEntity<Message>(message, HttpStatus.OK);
-	}
-	
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseEntity<Message> delete(@PathVariable Long id){
-		Person person = personDAO.get(id);
-		personDAO.delete(person);
+		personService.delete(id);
 		Message message = new Message(Message.Type.SUCCESS, "OK");
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 	}

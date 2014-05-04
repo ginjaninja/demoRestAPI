@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -15,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ginjaninja.demoRestAPI.config.WebAppConfigurationAware;
 
+//@DatabaseSetup("person.xml")
 public class PersonControllerImplTest extends WebAppConfigurationAware {
 	
 	@Test
@@ -32,7 +32,7 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status", is("ERROR")))
-			.andExpect(jsonPath("$.message", is("No results found")))
+			.andExpect(jsonPath("$.message", is("Person not found")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -54,7 +54,6 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 		personJSON.put("firstName", "Another James");
 		personJSON.put("lastName", "Brown");
 		personJSON.put("activeInd", "Y");
-		personJSON.put("activityDtTm", new DateTime().toString());
 		
 		MvcResult result = mockMvc.perform(post("/person")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -73,9 +72,6 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 		ObjectNode personJSON = mapper.createObjectNode();
 		personJSON.put("id", "1");
 		personJSON.put("firstName", "Old James");
-		personJSON.put("lastName", "Brown");
-		personJSON.put("activeInd", "Y");
-		personJSON.put("activityDtTm", new DateTime().toString());
 		
 		MvcResult result = mockMvc.perform(put("/person")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -83,46 +79,6 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status", is("SUCCESS")))
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-		
-	}
-
-	@Test
-	public void testDelete() throws JsonProcessingException, Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode personJSON = mapper.createObjectNode();
-		personJSON.put("id", "1");
-		personJSON.put("lastName", "Brown");
-		personJSON.put("activeInd", "Y");
-		personJSON.put("activityDtTm", new DateTime().toString());
-		
-		MvcResult result = mockMvc.perform(delete("/person")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(personJSON)))
-			.andDo(print())
-			.andExpect(status().isOk())
-		    .andReturn();
-		
-		System.out.println(result.getResponse().getContentAsString());
-		
-	}
-	
-	@Test
-	public void testDeleteError() throws JsonProcessingException, Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode personJSON = mapper.createObjectNode();
-		personJSON.put("id", "256");
-		personJSON.put("lastName", "Brown");
-		personJSON.put("activeInd", "Y");
-		personJSON.put("activityDtTm", new DateTime().toString());
-		
-		MvcResult result = mockMvc.perform(delete("/person")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsBytes(personJSON)))
-			.andDo(print())
-			.andExpect(status().isOk())
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());

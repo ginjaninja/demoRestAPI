@@ -2,6 +2,7 @@ package com.ginjaninja.restAPI.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,11 +43,12 @@ public class GenericDAOImpl <T, K extends Serializable> implements GenericDAO<T,
 		t = this.entityManager.merge(t);
         this.entityManager.remove(t);
 	}
-	
+
 	@Override
-	public void delete(K k) {
-		T t = entityManager.find(entityClass, k);
-		this.entityManager.remove(t);
+	public Collection<T> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 	
 }

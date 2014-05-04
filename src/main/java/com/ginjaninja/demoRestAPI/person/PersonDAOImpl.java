@@ -61,13 +61,4 @@ public class PersonDAOImpl {
 		person = this.entityManager.merge(person);
         this.entityManager.remove(person);
 	}
-	
-	/**
-	 * Delete person with id
-	 * @param id		{@link Long}
-	 */
-	public void delete(Long id) {
-		Person person = entityManager.find(Person.class, id);
-		this.entityManager.remove(person);
-	}
 }
