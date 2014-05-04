@@ -42,6 +42,7 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 		MvcResult result = mockMvc.perform(get("/person"))
 			.andDo(print())
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status", is("SUCCESS")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -81,10 +82,72 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 				.content(mapper.writeValueAsBytes(personJSON)))
 			.andDo(print())
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status", is("SUCCESS")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+		
+	}
+
+	@Test
+	public void testDelete() throws JsonProcessingException, Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode personJSON = mapper.createObjectNode();
+		personJSON.put("id", "1");
+		personJSON.put("lastName", "Brown");
+		personJSON.put("activeInd", "Y");
+		personJSON.put("activityDtTm", new DateTime().toString());
+		
+		MvcResult result = mockMvc.perform(delete("/person")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsBytes(personJSON)))
+			.andDo(print())
+			.andExpect(status().isOk())
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
 		
 	}
 	
+	@Test
+	public void testDeleteError() throws JsonProcessingException, Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode personJSON = mapper.createObjectNode();
+		personJSON.put("id", "256");
+		personJSON.put("lastName", "Brown");
+		personJSON.put("activeInd", "Y");
+		personJSON.put("activityDtTm", new DateTime().toString());
+		
+		MvcResult result = mockMvc.perform(delete("/person")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsBytes(personJSON)))
+			.andDo(print())
+			.andExpect(status().isOk())
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+		
+	}
+	
+	@Test
+	public void testDeleteId() throws JsonProcessingException, Exception {
+		MvcResult result = mockMvc.perform(delete("/person/3"))
+			.andDo(print())
+			.andExpect(status().isOk())
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+		
+	}
+	
+	@Test
+	public void testDeleteIdError() throws JsonProcessingException, Exception {
+		MvcResult result = mockMvc.perform(delete("/person/256"))
+			.andDo(print())
+			.andExpect(status().isOk())
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+		
+	}
 }

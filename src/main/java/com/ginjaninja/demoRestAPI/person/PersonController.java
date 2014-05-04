@@ -61,7 +61,6 @@ public class PersonController {
 			return new ResponseEntity<Message>(message, HttpStatus.BAD_REQUEST);
 		}
 		personDAO.save(person);
-		
 		if(person.getId() == null){
 			message = new Message(Message.Type.ERROR, "Could not save person");
 			return new ResponseEntity<Message>(message, HttpStatus.OK);
@@ -69,23 +68,49 @@ public class PersonController {
 			message = new Message(Message.Type.SUCCESS, "OK", person);
 			return new ResponseEntity<Message>(message, HttpStatus.OK);
 		}
-		
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> update(@RequestBody final Person person, BindingResult bindingResult){
+	public ResponseEntity<Message> update(@RequestBody final Person person, BindingResult bindingResult){
+		Message message;
 		if(bindingResult.hasErrors()){
-			//return error code for this and other calls if person is not properly formed json
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
+			return new ResponseEntity<Message>(HttpStatus.BAD_REQUEST);
 		}
 		personDAO.update(person);
-		if(person.getId() != null){
-			return new ResponseEntity<String>(person.getId().toString(), HttpStatus.OK);
+		if(person.getId() == null){
+			message = new Message(Message.Type.ERROR, "Could not update person");
+			return new ResponseEntity<Message>(message, HttpStatus.OK);
 		}else{
-			return new ResponseEntity<String>("ERROR", HttpStatus.OK);
+			message = new Message(Message.Type.SUCCESS, "OK", person);
+			return new ResponseEntity<Message>(message, HttpStatus.OK);
 		}
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE, 
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Message> delete(@RequestBody final Person person, BindingResult bindingResult){
+		Message message;
+		if(bindingResult.hasErrors()){
+			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
+			return new ResponseEntity<Message>(HttpStatus.BAD_REQUEST);
+		}
+		personDAO.delete(person);
+		message = new Message(Message.Type.SUCCESS, "OK");
+		return new ResponseEntity<Message>(message, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public ResponseEntity<Message> delete(@PathVariable Long id){
+		Person person = personDAO.get(id);
+		personDAO.delete(person);
+		Message message = new Message(Message.Type.SUCCESS, "OK");
+		return new ResponseEntity<Message>(message, HttpStatus.OK);
 	}
 }
