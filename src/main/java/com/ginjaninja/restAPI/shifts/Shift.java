@@ -1,4 +1,4 @@
-package com.ginjaninja.demoRestAPI.person;
+package com.ginjaninja.restAPI.shifts;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,24 +14,24 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.ginjaninja.restAPI.shifts.ShiftAssignment;
-
 @Entity
-@Table(name = "PERSON")
-public class Person implements Serializable {
- 
-    @Id
+@Table(name = "SHIFT")
+public class Shift implements Serializable {
+	@Id
     @GeneratedValue
     @Column(name = "id")
     private Long id;
-    
-    @Column(name = "first_name", length = 30)
-    private String firstName;
-    
-    @Column(name = "last_name", length = 30, nullable = false)
-    private String lastName;
-    
-    @Column(name = "active_ind", length = 1, nullable = false)
+	
+	@Column(name = "label", length = 50, nullable = false)
+	private String label;
+	
+	@Column(name = "min_assigned", length = 3, nullable = false)
+	private Integer minAssigned;
+	
+	@Column(name = "max_assigned", length = 3, nullable = false)
+	private Integer maxAssigned;
+	
+	@Column(name = "active_ind", length = 1, nullable = false)
     private String activeInd;
      
     @Column(name = "activity_dt_tm", nullable = false) 
@@ -39,42 +39,52 @@ public class Person implements Serializable {
     
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
-    
+	
     @OneToMany
     private Set<ShiftAssignment> shifts = new HashSet<ShiftAssignment>();
     
     
-    public Person() {}
-
-     
+    public Shift(){
+    	
+    }
+    
     @Override
 	public String toString(){
 		return ReflectionToStringBuilder.toString(this);
 	}
     
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-	public String getFirstName() {
-		return firstName;
+	public Long getId() {
+		return id;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public String getLabel() {
+		return label;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setLabel(String label) {
+		this.label = label;
 	}
-    
+
+	public Integer getMinAssigned() {
+		return minAssigned;
+	}
+
+	public void setMinAssigned(Integer minAssigned) {
+		this.minAssigned = minAssigned;
+	}
+
+	public Integer getMaxAssigned() {
+		return maxAssigned;
+	}
+
+	public void setMaxAssigned(Integer maxAssigned) {
+		this.maxAssigned = maxAssigned;
+	}
+
 	public String getActiveInd() {
 		return activeInd;
 	}
@@ -91,11 +101,9 @@ public class Person implements Serializable {
 		this.activityDtTm = activityDtTm;
 	}
 
-
 	public Date getCreatedDtTm() {
 		return createdDtTm;
 	}
-
 
 	public void setCreatedDtTm(Date createdDtTm) {
 		this.createdDtTm = createdDtTm;
@@ -110,5 +118,4 @@ public class Person implements Serializable {
 	public void setShifts(Set<ShiftAssignment> shifts) {
 		this.shifts = shifts;
 	}
-
 }
