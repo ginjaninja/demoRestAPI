@@ -14,57 +14,82 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ginjaninja.demoRestAPI.message.Message;
 
+/**
+ * Controller for requests to /person
+ *
+ */
 @Controller
 @RequestMapping(value={"person"})
 public class PersonController {
 	@Autowired
 	PersonService personService;
 	
+	/**
+	 * Get all people
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Message> getAll(){
-		Message message;
 		People people = new People(personService.getAll());
-		message = new Message(Message.Type.SUCCESS, "OK", people);
+		Message message = new Message(Message.Type.SUCCESS, "OK", people);
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 		
 	}
 	
+	/**
+	 * Get person by id
+	 * @param id Integer
+	 * @return ResponseEntity<Message>(message, status)
+	 */
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Message> get(@PathVariable Integer id){
 		Message message;
+		HttpStatus status;
 		Person person = personService.get(id);
 		if(person == null){
 			message = new Message(Message.Type.ERROR, "Person not found");
-			return new ResponseEntity<Message>(message, HttpStatus.OK);
+			status = HttpStatus.UNPROCESSABLE_ENTITY;
 		}else{
 			message = new Message(Message.Type.SUCCESS, "OK", person);
-			return new ResponseEntity<Message>(message, HttpStatus.OK);
+			status = HttpStatus.OK;
 		}
+		return new ResponseEntity<Message>(message, status);
 	}
 	
-	
+	/**
+	 * Save person from json object
+	 * @param person Person
+	 * @return ResponseEntity<Message>(message, status)
+	 */
 	@RequestMapping(method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Message> save(@RequestBody final Person person, BindingResult bindingResult){
 		Message message;
+		HttpStatus status;
 		if(bindingResult.hasErrors()){
 			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
-			return new ResponseEntity<Message>(message, HttpStatus.BAD_REQUEST);
-		}
-		personService.save(person);
-		if(person.getId() == null){
-			message = new Message(Message.Type.ERROR, "Could not save person");
-			return new ResponseEntity<Message>(message, HttpStatus.OK);
+			status = HttpStatus.BAD_REQUEST;
 		}else{
-			message = new Message(Message.Type.SUCCESS, "OK", person);
-			return new ResponseEntity<Message>(message, HttpStatus.OK);
+		    personService.save(person);
+	        if(person.getId() == null){
+	            message = new Message(Message.Type.ERROR, "Could not save person");
+	            status = HttpStatus.UNPROCESSABLE_ENTITY;
+	        }else{
+	            message = new Message(Message.Type.SUCCESS, "OK", person);
+	            status = HttpStatus.OK;
+	        }
 		}
+		return new ResponseEntity<Message>(message, status);
 	}
 	
+	/**
+	 * Update person
+	 * @param person Person
+	 * @return ResponseEntity<Message>(message, status)
+	 */
 	@RequestMapping(method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -73,18 +98,25 @@ public class PersonController {
 		Message message;
 		if(bindingResult.hasErrors()){
 			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
-			return new ResponseEntity<Message>(HttpStatus.BAD_REQUEST);
-		}
-		personService.update(person);
-		if(person.getId() == null){
-			message = new Message(Message.Type.ERROR, "Could not update person");
-			return new ResponseEntity<Message>(message, HttpStatus.OK);
+			status = HttpStatus.BAD_REQUEST;
 		}else{
-			message = new Message(Message.Type.SUCCESS, "OK", person);
-			return new ResponseEntity<Message>(message, HttpStatus.OK);
+		    personService.update(person);
+	        if(person.getId() == null){
+	            message = new Message(Message.Type.ERROR, "Could not update person");
+	            status = HttpStatus.UNPROCESSABLE_ENTITY;
+	        }else{
+	            message = new Message(Message.Type.SUCCESS, "OK", person);
+	            status = HttpStatus.OK;
+	        }
 		}
+		return new ResponseEntity<Message>(message, status);
 	}
 	
+	/**
+	 * Delete person by id
+	 * @param id Integer
+	 * @return ResponseEntity<Message>(message, status)
+	 */
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseEntity<Message> delete(@PathVariable Integer id){

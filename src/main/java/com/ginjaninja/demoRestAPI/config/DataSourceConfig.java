@@ -1,1 +1,1 @@
-package com.ginjaninja.demoRestAPI.config;import org.springframework.context.annotation.Configuration;import javax.sql.DataSource;@Configurationpublic interface DataSourceConfig {    DataSource dataSource();}
+package com.ginjaninja.demoRestAPI.config;import org.springframework.context.annotation.Configuration;import javax.sql.DataSource;/** * Spring DataSource config interface * */@Configurationpublic interface DataSourceConfig {    DataSource dataSource();}

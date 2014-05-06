@@ -14,6 +14,13 @@ import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+@NamedQueries(value=
+    @NamedQuery(
+        name="getAllShifts",
+        query="SELECT s FROM Shift s"
+    )
+)
+
 @Entity
 public class Shift implements Serializable {
 	@Id

@@ -8,6 +8,10 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
+/**
+ * Default DataSource config. Uses properties from persisence.properties file.
+ *
+ */
 @Configuration
 @Profile("default")
 class DefaultDataSourceConfig implements DataSourceConfig {

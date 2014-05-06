@@ -69,7 +69,7 @@ public class PersonService {
 	}
 	
 	/**
-	 * Use existing person object to fill in missing members
+	 * Use existing person object with id to fill in missing fields for update
 	 * @param person	{@link Person}
 	 * @return			{@link Person}
 	 */

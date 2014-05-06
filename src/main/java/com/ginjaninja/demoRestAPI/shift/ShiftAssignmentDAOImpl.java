@@ -5,6 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ginjaninja.demoRestAPI.dao.GenericDAOImpl;
 
+/**
+ * Implements GenericDAO for ShiftAssignment class
+ *
+ */
 @Repository
 @Transactional
 public class ShiftAssignmentDAOImpl extends GenericDAOImpl<ShiftAssignment> {

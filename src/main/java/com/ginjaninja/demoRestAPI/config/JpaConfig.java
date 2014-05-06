@@ -18,6 +18,10 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 import com.ginjaninja.demoRestAPI.Application;
 
+/**
+ * Configure entityManager and transactionManager.
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackageClasses = Application.class)
