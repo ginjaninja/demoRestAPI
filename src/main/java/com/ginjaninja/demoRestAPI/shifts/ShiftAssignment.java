@@ -1,4 +1,4 @@
-package com.ginjaninja.restAPI.shifts;
+package com.ginjaninja.demoRestAPI.shifts;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,12 +16,12 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.ginjaninja.demoRestAPI.person.Person;
 
 @Entity
-@Table(name = "SHIFT_ASSIGNMENT")
+@Table(name = "shift_assignment")
 public class ShiftAssignment implements Serializable {
 	@Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 	
 	@ManyToOne
 	@JoinColumn(name = "person_id")
@@ -30,6 +30,12 @@ public class ShiftAssignment implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "shift_id")
 	private Shift shift;
+	
+	@Column(name = "start_dt_tm") 
+    private Date startDtTm;
+	
+	@Column(name = "end_dt_tm") 
+    private Date endDtTm;
 	
 	@Column(name = "active_ind", length = 1, nullable = false)
     private String activeInd;
@@ -50,11 +56,11 @@ public class ShiftAssignment implements Serializable {
 		return ReflectionToStringBuilder.toString(this);
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
@@ -96,5 +102,21 @@ public class ShiftAssignment implements Serializable {
 
 	public void setCreatedDtTm(Date createdDtTm) {
 		this.createdDtTm = createdDtTm;
+	}
+
+	public Date getStartDtTm() {
+		return startDtTm;
+	}
+
+	public void setStartDtTm(Date startDtTm) {
+		this.startDtTm = startDtTm;
+	}
+
+	public Date getEndDtTm() {
+		return endDtTm;
+	}
+
+	public void setEndDtTm(Date endDtTm) {
+		this.endDtTm = endDtTm;
 	}
 }

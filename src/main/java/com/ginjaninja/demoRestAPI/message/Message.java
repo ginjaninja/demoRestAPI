@@ -1,4 +1,4 @@
-package com.ginjaninja.restAPI.message;
+package com.ginjaninja.demoRestAPI.message;
 
 import java.io.Serializable;
 

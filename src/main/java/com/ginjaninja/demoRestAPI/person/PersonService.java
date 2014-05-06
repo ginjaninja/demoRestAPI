@@ -5,12 +5,15 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class PersonService {
 	@Autowired
 	PersonDAOImpl personDAO;
-	//GenericDAO<Person, Long> personDAO;
+	
+	
 	
 	public PersonService(){
 		
@@ -18,10 +21,10 @@ public class PersonService {
 	
 	/**
 	 * Fetch Person with id
-	 * @param id	{@link Long}
+	 * @param id	{@link Integer}
 	 * @return		{@link Person}
 	 */
-	public Person get(Long id) {
+	public Person get(Integer id) {
 		return personDAO.get(id);
 	}
 	
@@ -30,7 +33,7 @@ public class PersonService {
 	 * @return		{@link Collection}
 	 */
 	public Collection<Person> getAll() {
-		return personDAO.getAll();
+		return personDAO.getMany("getAllPeople");
 	}
 	
 	/**
@@ -58,9 +61,9 @@ public class PersonService {
 	
 	/**
 	 * Delete person with id
-	 * @param id		{@link Long}
+	 * @param id		{@link Integer}
 	 */
-	public void delete(Long id) {
+	public void delete(Integer id) {
 		Person person = personDAO.get(id);
 		personDAO.delete(person);
 	}
@@ -80,6 +83,9 @@ public class PersonService {
 		}
 		if(person.getLastName() == null){
 			person.setLastName(savedPerson.getLastName());
+		}
+		if(person.getCreatedDtTm() == null){
+			person.setCreatedDtTm(savedPerson.getCreatedDtTm());
 		}
 		this.updateActivityDtTm(person);
 		return person;

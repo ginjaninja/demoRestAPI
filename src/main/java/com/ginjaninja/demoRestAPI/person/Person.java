@@ -9,21 +9,30 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.ginjaninja.restAPI.shifts.ShiftAssignment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ginjaninja.demoRestAPI.shifts.ShiftAssignment;
+
+@NamedQueries(value=
+	@NamedQuery(
+	    name="getAllPeople",
+	    query="SELECT p FROM Person p"
+	)
+)
 
 @Entity
-@Table(name = "PERSON")
 public class Person implements Serializable {
  
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     
     @Column(name = "first_name", length = 30)
     private String firstName;
@@ -40,8 +49,9 @@ public class Person implements Serializable {
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
     
-    @OneToMany
-    private Set<ShiftAssignment> shifts = new HashSet<ShiftAssignment>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "person")
+    private Set<ShiftAssignment> shiftAssignments = new HashSet<ShiftAssignment>();
     
     
     public Person() {}
@@ -52,10 +62,10 @@ public class Person implements Serializable {
 		return ReflectionToStringBuilder.toString(this);
 	}
     
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -102,13 +112,14 @@ public class Person implements Serializable {
 	}
 
 
-	public Set<ShiftAssignment> getShifts() {
-		return shifts;
+	public Set<ShiftAssignment> getShiftAssignments() {
+		return shiftAssignments;
 	}
 
 
-	public void setShifts(Set<ShiftAssignment> shifts) {
-		this.shifts = shifts;
+	public void setShiftAssignments(Set<ShiftAssignment> shiftAssignments) {
+		this.shiftAssignments = shiftAssignments;
 	}
-
+	
+	
 }

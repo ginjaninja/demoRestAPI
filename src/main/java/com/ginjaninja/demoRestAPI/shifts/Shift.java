@@ -1,6 +1,7 @@
-package com.ginjaninja.restAPI.shifts;
+package com.ginjaninja.demoRestAPI.shifts;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,17 +11,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @Entity
-@Table(name = "SHIFT")
 public class Shift implements Serializable {
 	@Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 	
 	@Column(name = "label", length = 50, nullable = false)
 	private String label;
@@ -40,8 +39,8 @@ public class Shift implements Serializable {
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 	
-    @OneToMany
-    private Set<ShiftAssignment> shifts = new HashSet<ShiftAssignment>();
+    @OneToMany(mappedBy = "shift")
+    private Set<ShiftAssignment> shiftAssignments = new HashSet<ShiftAssignment>();
     
     
     public Shift(){
@@ -53,11 +52,11 @@ public class Shift implements Serializable {
 		return ReflectionToStringBuilder.toString(this);
 	}
     
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -109,13 +108,13 @@ public class Shift implements Serializable {
 		this.createdDtTm = createdDtTm;
 	}
 
+	public Set<ShiftAssignment> getShiftAssignments() {
+		return shiftAssignments;
+	}
 
-	public Set<ShiftAssignment> getShifts() {
-		return shifts;
+	public void setShiftAssignments(Set<ShiftAssignment> shiftAssignments) {
+		this.shiftAssignments = shiftAssignments;
 	}
 
 
-	public void setShifts(Set<ShiftAssignment> shifts) {
-		this.shifts = shifts;
-	}
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ginjaninja.restAPI.message.Message;
+import com.ginjaninja.demoRestAPI.message.Message;
 
 @Controller
 @RequestMapping(value={"person"})
@@ -32,7 +32,7 @@ public class PersonController {
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Message> get(@PathVariable Long id){
+	public ResponseEntity<Message> get(@PathVariable Integer id){
 		Message message;
 		Person person = personService.get(id);
 		if(person == null){
@@ -87,7 +87,7 @@ public class PersonController {
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseEntity<Message> delete(@PathVariable Long id){
+	public ResponseEntity<Message> delete(@PathVariable Integer id){
 		personService.delete(id);
 		Message message = new Message(Message.Type.SUCCESS, "OK");
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
