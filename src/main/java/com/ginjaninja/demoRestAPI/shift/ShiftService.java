@@ -1,5 +1,13 @@
 package com.ginjaninja.demoRestAPI.shift;
 
+import java.util.Collection;
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
 @Transactional
 public class ShiftService {

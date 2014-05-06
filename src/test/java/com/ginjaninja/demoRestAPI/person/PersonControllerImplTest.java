@@ -31,8 +31,8 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 		MvcResult result = mockMvc.perform(get("/person/133"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status", is("ERROR")))
-			.andExpect(jsonPath("$.message", is("Person not found")))
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Person not found")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -42,7 +42,7 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 		MvcResult result = mockMvc.perform(get("/person"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status", is("SUCCESS")))
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -78,7 +78,7 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 				.content(mapper.writeValueAsBytes(personJSON)))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status", is("SUCCESS")))
+			.andExpect(jsonPath("$.type", is("SUCCESS")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());

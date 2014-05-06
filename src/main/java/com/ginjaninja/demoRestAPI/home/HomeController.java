@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ginjaninja.demoRestAPI.message.Message;
+
 /**
  * Controller for requests to /
  *
@@ -17,7 +19,7 @@ public class HomeController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public String index() {
+	public ResponseEntity<Message> index() {
 	    Message message = new Message(Message.Type.SUCCESS, "OK");
         return new ResponseEntity<Message>(message, HttpStatus.OK);
 	}

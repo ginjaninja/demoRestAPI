@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ginjaninja.demoRestAPI.controller.ControllerInterface;
 import com.ginjaninja.demoRestAPI.message.Message;
 
 /**
@@ -20,7 +21,7 @@ import com.ginjaninja.demoRestAPI.message.Message;
  */
 @Controller
 @RequestMapping(value={"person"})
-public class PersonController {
+public class PersonController implements ControllerInterface<Person>{
 	@Autowired
 	PersonService personService;
 	
@@ -41,6 +42,7 @@ public class PersonController {
 	 * @param id Integer
 	 * @return ResponseEntity<Message>(message, status)
 	 */
+	@Override
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Message> get(@PathVariable Integer id){
@@ -62,6 +64,7 @@ public class PersonController {
 	 * @param person Person
 	 * @return ResponseEntity<Message>(message, status)
 	 */
+	@Override
 	@RequestMapping(method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -90,12 +93,14 @@ public class PersonController {
 	 * @param person Person
 	 * @return ResponseEntity<Message>(message, status)
 	 */
+	@Override
 	@RequestMapping(method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Message> update(@RequestBody final Person person, BindingResult bindingResult){
 		Message message;
+		HttpStatus status;
 		if(bindingResult.hasErrors()){
 			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
 			status = HttpStatus.BAD_REQUEST;
@@ -117,6 +122,7 @@ public class PersonController {
 	 * @param id Integer
 	 * @return ResponseEntity<Message>(message, status)
 	 */
+	@Override
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseEntity<Message> delete(@PathVariable Integer id){
