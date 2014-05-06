@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ginjaninja.demoRestAPI.shifts.ShiftAssignment;
+import com.ginjaninja.demoRestAPI.shift.ShiftAssignment;
 
 @NamedQueries(value=
 	@NamedQuery(

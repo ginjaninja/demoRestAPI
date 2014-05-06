@@ -1,34 +1,41 @@
-package com.ginjaninja.demoRestAPI.shifts;
+package com.ginjaninja.demoRestAPI.shift;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import com.ginjaninja.demoRestAPI.person.Person;
+
 @Entity
-public class Shift implements Serializable {
+@Table(name = "shift_assignment")
+public class ShiftAssignment implements Serializable {
 	@Id
     @GeneratedValue
     @Column(name = "id")
     private Integer id;
 	
-	@Column(name = "label", length = 50, nullable = false)
-	private String label;
+	@ManyToOne
+	@JoinColumn(name = "person_id")
+	private Person person;
 	
-	@Column(name = "min_assigned", length = 3, nullable = false)
-	private Integer minAssigned;
+	@ManyToOne
+	@JoinColumn(name = "shift_id")
+	private Shift shift;
 	
-	@Column(name = "max_assigned", length = 3, nullable = false)
-	private Integer maxAssigned;
+	@Column(name = "start_dt_tm") 
+    private Date startDtTm;
+	
+	@Column(name = "end_dt_tm") 
+    private Date endDtTm;
 	
 	@Column(name = "active_ind", length = 1, nullable = false)
     private String activeInd;
@@ -38,20 +45,17 @@ public class Shift implements Serializable {
     
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
-	
-    @OneToMany(mappedBy = "shift")
-    private Set<ShiftAssignment> shiftAssignments = new HashSet<ShiftAssignment>();
     
     
-    public Shift(){
+    public ShiftAssignment(){
     	
     }
     
-    @Override
+	@Override
 	public String toString(){
 		return ReflectionToStringBuilder.toString(this);
 	}
-    
+
 	public Integer getId() {
 		return id;
 	}
@@ -59,29 +63,21 @@ public class Shift implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getLabel() {
-		return label;
+	
+	public Person getPerson() {
+		return person;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 
-	public Integer getMinAssigned() {
-		return minAssigned;
+	public Shift getShift() {
+		return shift;
 	}
 
-	public void setMinAssigned(Integer minAssigned) {
-		this.minAssigned = minAssigned;
-	}
-
-	public Integer getMaxAssigned() {
-		return maxAssigned;
-	}
-
-	public void setMaxAssigned(Integer maxAssigned) {
-		this.maxAssigned = maxAssigned;
+	public void setShift(Shift shift) {
+		this.shift = shift;
 	}
 
 	public String getActiveInd() {
@@ -108,13 +104,19 @@ public class Shift implements Serializable {
 		this.createdDtTm = createdDtTm;
 	}
 
-	public Set<ShiftAssignment> getShiftAssignments() {
-		return shiftAssignments;
+	public Date getStartDtTm() {
+		return startDtTm;
 	}
 
-	public void setShiftAssignments(Set<ShiftAssignment> shiftAssignments) {
-		this.shiftAssignments = shiftAssignments;
+	public void setStartDtTm(Date startDtTm) {
+		this.startDtTm = startDtTm;
 	}
 
+	public Date getEndDtTm() {
+		return endDtTm;
+	}
 
+	public void setEndDtTm(Date endDtTm) {
+		this.endDtTm = endDtTm;
+	}
 }
