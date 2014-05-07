@@ -16,8 +16,7 @@ public class HomeControllerTest extends WebAppConfigurationAware {
 		mockMvc.perform(get("/"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.type", is("SUCCESS")))
-			.andExpect(jsonPath("$.text", is("OK")));
+			.andExpect(jsonPath("$.type", is("SUCCESS")));
 	}
 
 	@Test
@@ -33,7 +32,8 @@ public class HomeControllerTest extends WebAppConfigurationAware {
 		mockMvc.perform(put("/"))
 			.andDo(print())
 			.andExpect(status().isNotImplemented())
-			.andExpect(jsonPath("$.type", is("ERROR")));
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Reqest methods PUT and DELETE are not implemented for this address.")));
 	}
 	
 	@Test
@@ -41,6 +41,7 @@ public class HomeControllerTest extends WebAppConfigurationAware {
 		mockMvc.perform(delete("/"))
 			.andDo(print())
 			.andExpect(status().isNotImplemented())
-			.andExpect(jsonPath("$.type", is("ERROR")));
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Reqest methods PUT and DELETE are not implemented for this address.")));
 	}
 }

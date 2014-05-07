@@ -1,4 +1,4 @@
-package com.ginjaninja.demoRestAPI.person;
+package com.ginjaninja.demoRestAPI.shift;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,54 +15,55 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ginjaninja.demoRestAPI.controller.ControllerExceptionHandler;
 import com.ginjaninja.demoRestAPI.controller.ControllerInterface;
 import com.ginjaninja.demoRestAPI.message.Message;
+import com.ginjaninja.demoRestAPI.person.People;
 
 /**
- * Controller for requests to /person
+ * Controller for requests to /shift
  *
  */
 @Controller
-@RequestMapping(value={"person"})
-public class PersonController extends ControllerExceptionHandler implements ControllerInterface<Person>{
+@RequestMapping(value={"shift"})
+public class ShiftController extends ControllerExceptionHandler implements ControllerInterface<Shift> {
 	@Autowired
-	PersonService personService;
+	ShiftService shiftService;
 	
 	/**
-	 * Get all people
+	 * Get all shifts
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Message> getAll(){
-		People people = new People(personService.getAll());
-		Message message = new Message(Message.Type.SUCCESS, "OK", people);
+		Shifts shifts = new Shifts(shiftService.getAll());
+		Message message = new Message(Message.Type.SUCCESS, "OK", shifts);
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 		
 	}
 	
 	/**
-	 * Get person by id
+	 * Get shift by id
 	 * @param id Integer
 	 * @return ResponseEntity<Message>(message, status)
 	 */
 	@Override
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Message> get(@PathVariable Integer id){
+	public ResponseEntity<Message> get(@PathVariable Integer id) {
 		Message message;
 		HttpStatus status;
-		Person person = personService.get(id);
-		if(person == null){
-			message = new Message(Message.Type.ERROR, "Person not found.");
+		Shift shift = shiftService.get(id);
+		if(shift == null){
+			message = new Message(Message.Type.ERROR, "Shift not found.");
 			status = HttpStatus.UNPROCESSABLE_ENTITY;
 		}else{
-			message = new Message(Message.Type.SUCCESS, "OK", person);
+			message = new Message(Message.Type.SUCCESS, "OK", shift);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<Message>(message, status);
 	}
-	
+
 	/**
-	 * Save person from json object
-	 * @param person Person
+	 * Save shift from json object
+	 * @param shift Shift
 	 * @return ResponseEntity<Message>(message, status)
 	 */
 	@Override
@@ -70,28 +71,28 @@ public class PersonController extends ControllerExceptionHandler implements Cont
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Message> save(@RequestBody final Person person, BindingResult bindingResult){
+	public ResponseEntity<Message> save(@RequestBody final Shift shift, BindingResult bindingResult){
 		Message message;
 		HttpStatus status;
 		if(bindingResult.hasErrors()){
 			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
 			status = HttpStatus.BAD_REQUEST;
 		}else{
-		    personService.save(person);
-	        if(person.getId() == null){
-	            message = new Message(Message.Type.ERROR, "Could not save person");
+		    shiftService.save(shift);
+	        if(shift.getId() == null){
+	            message = new Message(Message.Type.ERROR, "Could not save shift");
 	            status = HttpStatus.UNPROCESSABLE_ENTITY;
 	        }else{
-	            message = new Message(Message.Type.SUCCESS, "OK", person);
+	            message = new Message(Message.Type.SUCCESS, "OK", shift);
 	            status = HttpStatus.OK;
 	        }
 		}
 		return new ResponseEntity<Message>(message, status);
 	}
-	
+
 	/**
-	 * Update person
-	 * @param person Person
+	 * Update shift
+	 * @param shift Shift
 	 * @return ResponseEntity<Message>(message, status)
 	 */
 	@Override
@@ -99,22 +100,27 @@ public class PersonController extends ControllerExceptionHandler implements Cont
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Message> update(@RequestBody final Person person, BindingResult bindingResult){
+	public ResponseEntity<Message> update(@RequestBody final Shift shift, BindingResult bindingResult){
 		Message message;
 		HttpStatus status;
 		if(bindingResult.hasErrors()){
 			message = new Message(Message.Type.ERROR, "Poorly formed JSON object");
 			status = HttpStatus.BAD_REQUEST;
 		}else{
-		    personService.update(person);
-		    message = new Message(Message.Type.SUCCESS, "OK", person);
-            status = HttpStatus.OK;
+		    Shift rShift = shiftService.update(shift);
+	        if(rShift == null){
+	            message = new Message(Message.Type.ERROR, "Could not update shift. Min_assigned must be less than or equal to max_assigned.");
+	            status = HttpStatus.UNPROCESSABLE_ENTITY;
+	        }else{
+	            message = new Message(Message.Type.SUCCESS, "OK", shift);
+	            status = HttpStatus.OK;
+	        }
 		}
 		return new ResponseEntity<Message>(message, status);
 	}
-	
+
 	/**
-	 * Delete person by id
+	 * Delete shift by id
 	 * @param id Integer
 	 * @return ResponseEntity<Message>(message, status)
 	 */
@@ -124,12 +130,12 @@ public class PersonController extends ControllerExceptionHandler implements Cont
 	public ResponseEntity<Message> delete(@PathVariable Integer id){
 		Message message;
 		HttpStatus status;
-		Boolean bool = personService.delete(id);
+		Boolean bool = shiftService.delete(id);
 		if(bool){
 			message = new Message(Message.Type.SUCCESS, "OK");
 			status = HttpStatus.OK;
 		}else{
-			message = new Message(Message.Type.ERROR, "Person not found. Could not delete person.");
+			message = new Message(Message.Type.ERROR, "Shift not found. Could not delete shift.");
 			status = HttpStatus.NOT_FOUND;
 		}
 		return new ResponseEntity<Message>(message, status);
@@ -144,8 +150,5 @@ public class PersonController extends ControllerExceptionHandler implements Cont
 		Message message = new Message(Message.Type.ERROR, "Reqest method DELETE is not allowed at this address.");
 		return new ResponseEntity<Message>(message, HttpStatus.METHOD_NOT_ALLOWED);
 	}
-	
-	
-	
-	
+
 }

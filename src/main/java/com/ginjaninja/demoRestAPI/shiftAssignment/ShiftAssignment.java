@@ -1,4 +1,4 @@
-package com.ginjaninja.demoRestAPI.shift;
+package com.ginjaninja.demoRestAPI.shiftAssignment;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +13,9 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ginjaninja.demoRestAPI.person.Person;
+import com.ginjaninja.demoRestAPI.shift.Shift;
 
 @Entity
 @Table(name = "shift_assignment")
@@ -31,10 +33,10 @@ public class ShiftAssignment implements Serializable {
 	@JoinColumn(name = "shift_id")
 	private Shift shift;
 	
-	@Column(name = "start_dt_tm") 
+	@Column(name = "start_dt_tm", nullable = false) 
     private Date startDtTm;
 	
-	@Column(name = "end_dt_tm") 
+	@Column(name = "end_dt_tm", nullable = false) 
     private Date endDtTm;
 	
 	@Column(name = "active_ind", length = 1, nullable = false)

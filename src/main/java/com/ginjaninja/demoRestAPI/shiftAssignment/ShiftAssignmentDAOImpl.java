@@ -1,4 +1,4 @@
-package com.ginjaninja.demoRestAPI.shift;
+package com.ginjaninja.demoRestAPI.shiftAssignment;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

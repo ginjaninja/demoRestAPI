@@ -45,6 +45,9 @@ public class PersonService {
 		if(person.getActiveInd() == null){
 			person.setActiveInd("Y");
 		}
+		if(person.getCreatedDtTm() == null){
+			person.setCreatedDtTm(new Date());
+		}
 		this.updateActivityDtTm(person);
 		return personDAO.save(person);
 	}
@@ -63,9 +66,14 @@ public class PersonService {
 	 * Delete person with id
 	 * @param id		{@link Integer}
 	 */
-	public void delete(Integer id) {
+	public Boolean delete(Integer id) {
 		Person person = personDAO.get(id);
-		personDAO.delete(person);
+		if(person == null){
+			return false;
+		}else{
+			personDAO.delete(person);
+			return true;
+		}
 	}
 	
 	/**

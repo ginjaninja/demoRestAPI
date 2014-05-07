@@ -42,11 +42,24 @@ public class ShiftService {
      * @return          {@link Shift}
      */
     public Shift save(Shift shift){
-        if(shift.getActiveInd() == null){
-            shift.setActiveInd("Y");
+        if(this.validMinMax(shift.getMinAssigned(), shift.getMaxAssigned())){
+	    	if(shift.getActiveInd() == null){
+	            shift.setActiveInd("Y");
+	        }
+	        if(shift.getMaxAssigned() == null){
+	        	shift.setMaxAssigned(1);
+	        }
+	        if(shift.getMinAssigned() == null){
+	        	shift.setMinAssigned(1);
+	        }
+	        if(shift.getCreatedDtTm() == null){
+	        	shift.setCreatedDtTm(new Date());
+	        }
+	        this.updateActivityDtTm(shift);
+	        return shiftDAO.save(shift);
+        }else{
+        	return null;
         }
-        this.updateActivityDtTm(shift);
-        return shiftDAO.save(shift);
     }
     
     /**
@@ -55,17 +68,26 @@ public class ShiftService {
      * @return          {@link Shift}
      */
     public Shift update(Shift shift) {
-        this.fillShift(shift);
-        return shiftDAO.update(shift);
+    	this.fillShift(shift);
+    	if(this.validMinMax(shift.getMinAssigned(), shift.getMaxAssigned())){
+    		return shiftDAO.update(shift);
+    	}else{
+    		return null;
+    	}
     }
     
     /**
      * Delete shift with id
      * @param id        {@link Integer}
      */
-    public void delete(Integer id) {
+    public Boolean delete(Integer id) {
         Shift shift = shiftDAO.get(id);
-        shiftDAO.delete(shift);
+        if(shift == null){
+        	return false;
+        }else{
+        	shiftDAO.delete(shift);
+        	return true;
+        }
     }
     
     /**
@@ -104,5 +126,19 @@ public class ShiftService {
             shift.setActivityDtTm(new Date());
         }
         return shift;
+    }
+    
+    /**
+     * Validate min/max
+     * @param min	Integer
+     * @param max	Integer
+     * @return		Boolean
+     */
+    private Boolean validMinMax(Integer min, Integer max){
+    	Boolean bool = true;
+    	if(min > max || max < min){
+    		bool = false;
+    	}
+    	return bool;
     }
 }

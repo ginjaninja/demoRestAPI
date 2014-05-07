@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ginjaninja.demoRestAPI.config.WebAppConfigurationAware;
 
 //@DatabaseSetup("person.xml")
-public class PersonControllerImplTest extends WebAppConfigurationAware {
+public class PersonControllerTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testGet() throws Exception{
@@ -27,12 +27,23 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testGetError() throws Exception{
+	public void testGetNullEntity() throws Exception{
 		MvcResult result = mockMvc.perform(get("/person/133"))
 			.andDo(print())
-			.andExpect(status().isOk())
+			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
-			.andExpect(jsonPath("$.text", is("Person not found")))
+			.andExpect(jsonPath("$.text", is("Person not found.")))
+		    .andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testGetBadId() throws Exception{
+		MvcResult result = mockMvc.perform(get("/person/abc"))
+			.andDo(print())
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Type mismatch. Please check your request.")))
 		    .andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 	}
@@ -67,6 +78,25 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 	}
 
 	@Test
+	public void testSaveBadContentType() throws JsonProcessingException, Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode personJSON = mapper.createObjectNode();
+		personJSON.put("firstName", "Another James");
+		personJSON.put("lastName", "Brown");
+		personJSON.put("activeInd", "Y");
+		
+		MvcResult result = mockMvc.perform(post("/person")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.content(mapper.writeValueAsBytes(personJSON)))
+			.andDo(print())
+			.andExpect(status().isUnsupportedMediaType())
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+		
+	}
+	
+	@Test
 	public void testUpdate() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode personJSON = mapper.createObjectNode();
@@ -86,7 +116,7 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testDeleteId() throws JsonProcessingException, Exception {
+	public void testDelete() throws JsonProcessingException, Exception {
 		MvcResult result = mockMvc.perform(delete("/person/3"))
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -97,11 +127,26 @@ public class PersonControllerImplTest extends WebAppConfigurationAware {
 	}
 	
 	@Test
-	public void testDeleteIdError() throws JsonProcessingException, Exception {
+	public void testDeleteError() throws JsonProcessingException, Exception {
 		MvcResult result = mockMvc.perform(delete("/person/256"))
 			.andDo(print())
-			.andExpect(status().isOk())
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.type", is("ERROR")))
+			.andExpect(jsonPath("$.text", is("Person not found. Could not delete person.")))
 		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+		
+	}
+	
+	@Test
+	public void testDeleteNotAllowed() throws JsonProcessingException, Exception {
+		MvcResult result = mockMvc.perform(delete("/person"))
+				.andDo(print())
+				.andExpect(status().isMethodNotAllowed())
+				.andExpect(jsonPath("$.type", is("ERROR")))
+				.andExpect(jsonPath("$.text", is("Reqest method DELETE is not allowed at this address.")))
+			    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());
 		

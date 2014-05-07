@@ -1,10 +1,12 @@
 package com.ginjaninja.demoRestAPI.person;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,12 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ginjaninja.demoRestAPI.shift.ShiftAssignment;
+import com.ginjaninja.demoRestAPI.shiftAssignment.ShiftAssignment;
 
 @NamedQueries(value=
 	@NamedQuery(
@@ -50,8 +51,8 @@ public class Person implements Serializable {
     private Date createdDtTm;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "person")
-    private Set<ShiftAssignment> shiftAssignments = new HashSet<ShiftAssignment>();
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private Collection<ShiftAssignment> shiftAssignments = new ArrayList();
     
     
     public Person() {}
@@ -112,12 +113,12 @@ public class Person implements Serializable {
 	}
 
 
-	public Set<ShiftAssignment> getShiftAssignments() {
+	public Collection<ShiftAssignment> getShiftAssignments() {
 		return shiftAssignments;
 	}
 
 
-	public void setShiftAssignments(Set<ShiftAssignment> shiftAssignments) {
+	public void setShiftAssignments(Collection<ShiftAssignment> shiftAssignments) {
 		this.shiftAssignments = shiftAssignments;
 	}
 	
