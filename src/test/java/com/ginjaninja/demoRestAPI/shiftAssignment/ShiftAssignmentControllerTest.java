@@ -118,7 +118,7 @@ public class ShiftAssignmentControllerTest extends WebAppConfigurationAware {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode assignmentJSON = mapper.createObjectNode();
 		assignmentJSON.put("personId", "5");
-		assignmentJSON.put("shiftId", "5");
+		assignmentJSON.put("shiftId", "2");
 		assignmentJSON.put("shiftDt", "05/08/2014");
 		assignmentJSON.put("checkConflict", "true");
 		
@@ -136,7 +136,7 @@ public class ShiftAssignmentControllerTest extends WebAppConfigurationAware {
 	public void testUpdate() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode assignmentJSON = mapper.createObjectNode();
-		assignmentJSON.put("id", "2");
+		assignmentJSON.put("id", "1");
 		assignmentJSON.put("personId", "7");
 		
 		MvcResult result = mockMvc.perform(put("/assign")
@@ -145,6 +145,25 @@ public class ShiftAssignmentControllerTest extends WebAppConfigurationAware {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.type", is("SUCCESS")))
+		    .andReturn();
+		
+		System.out.println(result.getResponse().getContentAsString());
+		
+	}
+	
+	@Test
+	public void testUpdateNonExistentPerson() throws JsonProcessingException, Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode assignmentJSON = mapper.createObjectNode();
+		assignmentJSON.put("id", "1");
+		assignmentJSON.put("personId", "777");
+		
+		MvcResult result = mockMvc.perform(put("/assign")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsBytes(assignmentJSON)))
+			.andDo(print())
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.type", is("ERROR")))
 		    .andReturn();
 		
 		System.out.println(result.getResponse().getContentAsString());

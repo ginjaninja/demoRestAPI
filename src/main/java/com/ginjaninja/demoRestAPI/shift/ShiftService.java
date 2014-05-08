@@ -54,6 +54,7 @@ public class ShiftService {
 	    if(shift.getCreatedDtTm() == null){
         	shift.setCreatedDtTm(new Date());
         }
+	    System.out.println(this.validMinMax(shift.getMinAssigned(), shift.getMaxAssigned()));
 	    if(this.validMinMax(shift.getMinAssigned(), shift.getMaxAssigned())){
 	        this.updateActivityDtTm(shift);
 	        return shiftDAO.save(shift);
@@ -137,7 +138,7 @@ public class ShiftService {
     private Boolean validMinMax(Integer min, Integer max){
     	Boolean bool = false;
     	if(min <= max){
-    		bool = false;
+    		bool = true;
     	}
     	return bool;
     }

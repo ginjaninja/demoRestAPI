@@ -15,7 +15,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ginjaninja.demoRestAPI.person.Person;
 import com.ginjaninja.demoRestAPI.shift.Shift;
 
@@ -23,24 +22,7 @@ import com.ginjaninja.demoRestAPI.shift.Shift;
 	@NamedQuery(
 	    name="findAllShiftAssignmentsForDateRange",
 	    query="SELECT a FROM ShiftAssignment a WHERE :start <= a.shiftDt AND :end >= a.shiftDt AND a.activeInd = 'Y' "
-	),
-	@NamedQuery(
-	    name="findAllShiftsForDateRange",
-	    query="SELECT a FROM ShiftAssignment a "
-	    		+ "INNER join a.shift s "
-	    		+ "INNER join a.person p "
-	    		+ "WHERE :start <= a.shiftDt AND :end >= a.shiftDt "
-	    		+ "AND a.activeInd = 'Y' "
-	    		+ "AND s.id = :shiftId"
-	),
-	@NamedQuery(
-		    name="findAllPersonShiftsForDateRange",
-		    query="SELECT a FROM ShiftAssignment a "
-		    		+ "INNER join a.person p "
-		    		+ "WHERE :start <= a.shiftDt AND :end >= a.shiftDt "
-		    		+ "AND a.activeInd = 'Y' "
-		    		+ "AND p.id = :personId"
-		)
+	)
 })
 
 @Entity

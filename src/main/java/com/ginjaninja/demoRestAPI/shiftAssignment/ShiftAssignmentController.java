@@ -79,7 +79,7 @@ public class ShiftAssignmentController extends ControllerExceptionHandler {
 			@RequestParam(value="personId") Integer personId,
 			@RequestParam(value="shiftId") Integer shiftId) {
 		ShiftAssignmentList assignments = 
-				new ShiftAssignmentList(shiftAssignmentService.findShiftsForDateRange(startDtTm, endDtTm, personId, shiftId));
+				new ShiftAssignmentList(shiftAssignmentService.getShiftsForDateRange(startDtTm, endDtTm, personId, shiftId));
 		Message message = new Message(Message.Type.SUCCESS, "OK", assignments);
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 	}
@@ -102,7 +102,6 @@ public class ShiftAssignmentController extends ControllerExceptionHandler {
 		}else{
 		    ShiftAssignment assignment = new ShiftAssignment();
 		    assignment.convertFromDTO(shiftAssignmentDTO);
-		    
 		    shiftAssignmentService.save(assignment, shiftAssignmentDTO.getCheckConflict());
 		    
 		    if(assignment.getId() == null){

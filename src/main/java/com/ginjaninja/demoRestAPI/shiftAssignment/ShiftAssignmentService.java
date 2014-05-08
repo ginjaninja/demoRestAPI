@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ginjaninja.demoRestAPI.person.Person;
 import com.ginjaninja.demoRestAPI.person.PersonDAOImpl;
 import com.ginjaninja.demoRestAPI.shift.Shift;
 import com.ginjaninja.demoRestAPI.shift.ShiftDAOImpl;
@@ -48,9 +49,10 @@ public class ShiftAssignmentService {
      * @return       			{@link ShiftAssignment}
      */
     public ShiftAssignment save(ShiftAssignment shiftAssignment, Boolean checkConflict){
-    	if(checkConflict == null){
+    	if(checkConflict == null || !checkConflict){
     		return this.save(shiftAssignment);
     	}
+    	
     	if(checkConflict && this.noConflict(shiftAssignment)){
     		return this.save(shiftAssignment);
 	    }
@@ -63,7 +65,7 @@ public class ShiftAssignmentService {
      * @return					{@link ShiftAssignment}
      */
     public ShiftAssignment save(ShiftAssignment shiftAssignment){
-    	if(this.checkMaxAssigned(shiftAssignment)){
+    	if(this.checkMaxAssigned(shiftAssignment) && this.checkShiftPersonExists(shiftAssignment)){
 	    	if(shiftAssignment.getActiveInd() == null){
 		    	shiftAssignment.setActiveInd("Y");
 	    	}
@@ -90,8 +92,9 @@ public class ShiftAssignmentService {
      */
     public ShiftAssignment update(ShiftAssignment shiftAssignment) {
         this.fillShiftAssignment(shiftAssignment);
-        System.out.println(shiftAssignment.toString());
-        if(this.checkMaxAssigned(shiftAssignment)){
+        System.out.println(this.checkShiftPersonExists(shiftAssignment));
+        
+        if(this.checkMaxAssigned(shiftAssignment) && this.checkShiftPersonExists(shiftAssignment)){
         	shiftAssignmentDAO.update(shiftAssignment);
         	this.fillPerson(shiftAssignment);
     	    this.fillShift(shiftAssignment);
@@ -136,13 +139,8 @@ public class ShiftAssignmentService {
      * @param personId	{@link Integer}
      * @return			Collection<ShiftAssignment>
      */
-    public Collection<ShiftAssignment> findShiftsForDateRange(Date start, Date end, Integer personId, Integer shiftId){
-    	Map<String, Object> params = new HashMap<>();
-    	params.put("start", start);
-    	params.put("end", end);
-    	params.put("id", personId);
-    	params.put("shiftId", shiftId);
-    	return shiftAssignmentDAO.getMany("findAllShiftsForDateRange", params);
+    public Collection<ShiftAssignment> getShiftsForDateRange(Date start, Date end, Integer personId, Integer shiftId){
+    	return shiftAssignmentDAO.getShiftsForDateRange(start, end, personId, shiftId);
     }
     
     
@@ -156,7 +154,7 @@ public class ShiftAssignmentService {
      * @return					{@link Boolean}
      */
     private Boolean noConflict(ShiftAssignment shiftAssignment){
-    	Collection<ShiftAssignment> assignments = this.findShiftsForDateRange(shiftAssignment.getShiftDt(), 
+    	Collection<ShiftAssignment> assignments = this.getShiftsForDateRange(shiftAssignment.getShiftDt(), 
     			shiftAssignment.getShiftDt(), shiftAssignment.getPerson().getId(), null);
     	if(assignments.isEmpty()){
     		return true;
@@ -172,10 +170,11 @@ public class ShiftAssignmentService {
      */
     private ShiftAssignment fillShiftAssignment(ShiftAssignment shiftAssignment){
         ShiftAssignment savedShiftAssignment = shiftAssignmentDAO.get(shiftAssignment.getId());
-        if(shiftAssignment.getPerson() == null){
-            shiftAssignment.setPerson(savedShiftAssignment.getPerson());
+        if(shiftAssignment.getPerson().getId() == null){
+        	shiftAssignment.setPerson(savedShiftAssignment.getPerson());
         }
-        if(shiftAssignment.getShift() == null){
+        
+        if(shiftAssignment.getShift().getId() == null){
             shiftAssignment.setShift(savedShiftAssignment.getShift());
         }
         if(shiftAssignment.getShiftDt() == null){
@@ -228,16 +227,18 @@ public class ShiftAssignmentService {
     }
     
     
+    /**
+     * Make sure shift.max_assigned threshold hasn't been met
+     * @param shiftAssignment {@link ShiftAssignment}
+     * @return					{@link Boolean}
+     */
     private Boolean checkMaxAssigned(ShiftAssignment shiftAssignment){
     	Shift shift = shiftDAO.get(shiftAssignment.getShift().getId());
     	if(shift == null){
     		throw new EntityNotFoundException("Failed to load shift for shift assignment.");
     	}
-    	Map<String, Object> params = new HashMap<>();
-    	params.put("start", shiftAssignment.getShiftDt());
-    	params.put("end", shiftAssignment.getShiftDt());
-    	params.put("shiftId", shift.getId());
-    	Collection<ShiftAssignment> assignments = shiftAssignmentDAO.getMany("findAllShiftsForDateRange", params);
+    	Collection<ShiftAssignment> assignments = this.getShiftsForDateRange(shiftAssignment.getShiftDt(), 
+    			shiftAssignment.getShiftDt(), null, shiftAssignment.getShift().getId());
     	if(assignments.isEmpty() || assignments.size() < shift.getMaxAssigned()){
     		return true;
     	}else{
@@ -245,5 +246,18 @@ public class ShiftAssignmentService {
     	}
     }
     
-    
+    /**
+     * Check if person and shift exist
+     * @param shiftAssignment	{@link ShiftAssignment}
+     * @return					{@link Boolean}
+     */
+    private Boolean checkShiftPersonExists(ShiftAssignment shiftAssignment){
+    	Shift shift = shiftDAO.get(shiftAssignment.getShift().getId());
+    	Person person = personDAO.get(shiftAssignment.getPerson().getId());
+    	if(person == null || shift == null){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    }
 }
