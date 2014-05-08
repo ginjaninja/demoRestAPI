@@ -51,12 +51,10 @@ public class ShiftAssignment implements Serializable {
     @Column(name = "id")
     private Integer id;
 	
-	@JsonBackReference 
 	@ManyToOne
 	@JoinColumn(name = "person_id")
 	private Person person;
 	
-	@JsonBackReference 
 	@ManyToOne
 	@JoinColumn(name = "shift_id")
 	private Shift shift;

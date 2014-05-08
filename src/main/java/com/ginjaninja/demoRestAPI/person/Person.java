@@ -49,7 +49,6 @@ public class Person implements Serializable {
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
     
-    @JsonManagedReference
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private Collection<ShiftAssignment> shiftAssignments = new ArrayList();
     

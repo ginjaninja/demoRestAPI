@@ -51,7 +51,6 @@ public class Shift implements Serializable {
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 	
-    @JsonManagedReference
     @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL)
     private Collection<ShiftAssignment> shiftAssignments = new ArrayList();
     

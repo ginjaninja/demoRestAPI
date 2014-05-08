@@ -99,7 +99,7 @@ public class ShiftAssignmentControllerTest extends WebAppConfigurationAware {
 	public void testSave() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode assignmentJSON = mapper.createObjectNode();
-		assignmentJSON.put("personId", "5");
+		assignmentJSON.put("personId", "8");
 		assignmentJSON.put("shiftId", "3");
 		assignmentJSON.put("shiftDt", "05/08/2014");
 		
