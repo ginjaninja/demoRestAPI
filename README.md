@@ -12,6 +12,7 @@ Project includes jUnit integration tests and a testData.sql file (demoRestAPI\sr
 
 This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assigned to Shifts for a day via ShiftAssignment. Fetch and delete operations can be accessed by id. Save and update operations consume JSON objects.
 
+###API End Points
 ####/person
 - GET     /person       
   - Fetch all people
@@ -54,7 +55,7 @@ This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assi
 - DELETE  /assign/1     
   - Delete shift assignment with id of 1
 
-
+###Structure of objects for passing save/update requests
 ####Person
 - firstName             
   - First name of person (max 30)
