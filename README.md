@@ -18,7 +18,7 @@ This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assi
 - POST    /person       Save person 
 - PUT     /person       Update person
 - DELETE  /person/1     Delete person with id of 1
-- 
+
 
 ####/shift
 - GET     /shift        Fetch all shifts
