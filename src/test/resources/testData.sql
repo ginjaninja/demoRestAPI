@@ -92,8 +92,7 @@ CREATE TABLE `shift_assignment` (
 
 LOCK TABLES `shift_assignment` WRITE;
 /*!40000 ALTER TABLE `shift_assignment` DISABLE KEYS */;
-INSERT INTO `shift_assignment` VALUES 
-(1,'Y','2014-05-07 16:22:52','2014-05-07 16:22:52','2014-05-08 00:00:00',5,5),
+INSERT INTO `shift_assignment` VALUES (1,'Y','2014-05-07 16:22:52','2014-05-07 16:22:52','2014-05-08 00:00:00',5,5),
 (2,'Y','2014-05-07 16:25:16','2014-05-07 16:25:16','2014-05-08 00:00:00',5,5),
 (4,'Y','2014-05-07 16:27:12','2014-05-07 16:27:12','2014-05-08 00:00:00',5,5);
 /*!40000 ALTER TABLE `shift_assignment` ENABLE KEYS */;
