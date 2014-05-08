@@ -17,15 +17,15 @@ This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assi
 - POST    /person       Save person 
 - PUT     /person       Update person
 - DELETE  /person/1     Delete person with id of 1
--
--
+
+
 - GET     /shift        Fetch all shifts
 - GET     /shift/1      Fetch shift with id of 1
 - POST    /shift        Save shift 
 - PUT     /shift        Update shift
 - DELETE  /shift/1      Delete shift with id of 1
--
--
+
+
 - GET     /assign/1     Fetch shift assignment with id of 1
 - GET     /assign       Fetch shift assignments within date range
 -                       {startDtm, endDtTm}
