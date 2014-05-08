@@ -134,10 +134,14 @@ public class ShiftAssignmentController extends ControllerExceptionHandler {
 		}else{
 			ShiftAssignment assignment = new ShiftAssignment();
 		    assignment.convertFromDTO(shiftAssignmentDTO);
-		    
-			shiftAssignmentService.update(assignment);
-			message = new Message(Message.Type.SUCCESS, "OK", assignment);
-            status = HttpStatus.OK;
+		    ShiftAssignment resAssignment = shiftAssignmentService.update(assignment);
+		    if(resAssignment == null){
+		    	message = new Message(Message.Type.ERROR, "Could not update shift assignment.");
+	            status = HttpStatus.UNPROCESSABLE_ENTITY;
+		    }else{
+		    	message = new Message(Message.Type.SUCCESS, "OK", assignment);
+	            status = HttpStatus.OK;
+		    }
 		}
 		return new ResponseEntity<Message>(message, status);
 	}

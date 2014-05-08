@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import com.ginjaninja.demoRestAPI.shift.ShiftDAOImpl;
 @Service
 @Transactional
 public class ShiftAssignmentService {
+	final static Logger LOG = LoggerFactory.getLogger("ShiftAssignmentService");
+	
     @Autowired
     ShiftAssignmentDAOImpl shiftAssignmentDAO;
     
@@ -92,8 +96,6 @@ public class ShiftAssignmentService {
      */
     public ShiftAssignment update(ShiftAssignment shiftAssignment) {
         this.fillShiftAssignment(shiftAssignment);
-        System.out.println(this.checkShiftPersonExists(shiftAssignment));
-        
         if(this.checkMaxAssigned(shiftAssignment) && this.checkShiftPersonExists(shiftAssignment)){
         	shiftAssignmentDAO.update(shiftAssignment);
         	this.fillPerson(shiftAssignment);
@@ -157,6 +159,7 @@ public class ShiftAssignmentService {
     	Collection<ShiftAssignment> assignments = this.getShiftsForDateRange(shiftAssignment.getShiftDt(), 
     			shiftAssignment.getShiftDt(), shiftAssignment.getPerson().getId(), null);
     	if(assignments.isEmpty()){
+    		LOG.info("Shift assignment conflict.");
     		return true;
     	}else{
     		return false;
@@ -242,6 +245,7 @@ public class ShiftAssignmentService {
     	if(assignments.isEmpty() || assignments.size() < shift.getMaxAssigned()){
     		return true;
     	}else{
+    		LOG.info("Max assigned threshold met.");
     		return false;
     	}
     }
@@ -255,6 +259,7 @@ public class ShiftAssignmentService {
     	Shift shift = shiftDAO.get(shiftAssignment.getShift().getId());
     	Person person = personDAO.get(shiftAssignment.getPerson().getId());
     	if(person == null || shift == null){
+    		LOG.info("Person or Shift does not exist in database.");
     		return false;
     	}else{
     		return true;

@@ -156,13 +156,13 @@ public class ShiftAssignmentControllerTest extends WebAppConfigurationAware {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode assignmentJSON = mapper.createObjectNode();
 		assignmentJSON.put("id", "1");
-		assignmentJSON.put("personId", "777");
+		assignmentJSON.put("personId", "897");
 		
 		MvcResult result = mockMvc.perform(put("/assign")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsBytes(assignmentJSON)))
 			.andDo(print())
-			.andExpect(status().isNotFound())
+			.andExpect(status().isUnprocessableEntity())
 			.andExpect(jsonPath("$.type", is("ERROR")))
 		    .andReturn();
 		
