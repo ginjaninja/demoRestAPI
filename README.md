@@ -26,7 +26,7 @@ This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assi
 - POST    /shift        Save shift 
 - PUT     /shift        Update shift
 - DELETE  /shift/1      Delete shift with id of 1
--
+
 
 ####/assign
 - GET     /assign/1     Fetch shift assignment with id of 1
@@ -37,7 +37,7 @@ This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assi
 - POST    /assign       Save shift assignment
 - PUT     /assign       Update shift assignment
 - DELETE  /assign/1     Delete shift assignment with id of 1
--
+
 
 ###Person
 - firstName             First name of person (max 30)
