@@ -53,7 +53,8 @@ public abstract class GenericDAOImpl <T>{
 	 * @return entityClass
 	 */
 	public T update(T t) {
-		return this.entityManager.merge(t);
+		this.entityManager.merge(t);
+		return t;
 	}
 	
 	/**

@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ginjaninja.demoRestAPI.shiftAssignment.ShiftAssignment;
 
 @NamedQueries(value=
@@ -51,7 +51,7 @@ public class Shift implements Serializable {
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
 	
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL)
     private Collection<ShiftAssignment> shiftAssignments = new ArrayList();
     

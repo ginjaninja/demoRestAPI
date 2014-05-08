@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,7 +16,7 @@ import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ginjaninja.demoRestAPI.shiftAssignment.ShiftAssignment;
 
 @NamedQueries(value=
@@ -50,7 +49,7 @@ public class Person implements Serializable {
     @Column(name = "created_dt_tm", nullable = false) 
     private Date createdDtTm;
     
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private Collection<ShiftAssignment> shiftAssignments = new ArrayList();
     

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ginjaninja.demoRestAPI.controller.ControllerExceptionHandler;
 import com.ginjaninja.demoRestAPI.controller.ControllerInterface;
 import com.ginjaninja.demoRestAPI.message.Message;
-import com.ginjaninja.demoRestAPI.person.People;
 
 /**
  * Controller for requests to /shift
@@ -33,7 +32,7 @@ public class ShiftController extends ControllerExceptionHandler implements Contr
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Message> getAll(){
-		Shifts shifts = new Shifts(shiftService.getAll());
+		ShiftList shifts = new ShiftList(shiftService.getAll());
 		Message message = new Message(Message.Type.SUCCESS, "OK", shifts);
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 		
@@ -109,7 +108,7 @@ public class ShiftController extends ControllerExceptionHandler implements Contr
 		}else{
 		    Shift rShift = shiftService.update(shift);
 	        if(rShift == null){
-	            message = new Message(Message.Type.ERROR, "Could not update shift. Min_assigned must be less than or equal to max_assigned.");
+	            message = new Message(Message.Type.ERROR, "Could not update shift. Check that values are valid.");
 	            status = HttpStatus.UNPROCESSABLE_ENTITY;
 	        }else{
 	            message = new Message(Message.Type.SUCCESS, "OK", shift);

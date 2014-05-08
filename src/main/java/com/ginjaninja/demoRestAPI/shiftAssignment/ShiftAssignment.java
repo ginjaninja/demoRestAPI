@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -16,6 +18,30 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ginjaninja.demoRestAPI.person.Person;
 import com.ginjaninja.demoRestAPI.shift.Shift;
+
+@NamedQueries({
+	@NamedQuery(
+	    name="findAllShiftAssignmentsForDateRange",
+	    query="SELECT a FROM ShiftAssignment a WHERE :start <= a.shiftDt AND :end >= a.shiftDt AND a.activeInd = 'Y' "
+	),
+	@NamedQuery(
+	    name="findAllShiftsForDateRange",
+	    query="SELECT a FROM ShiftAssignment a "
+	    		+ "INNER join a.shift s "
+	    		+ "INNER join a.person p "
+	    		+ "WHERE :start <= a.shiftDt AND :end >= a.shiftDt "
+	    		+ "AND a.activeInd = 'Y' "
+	    		+ "AND s.id = :shiftId"
+	),
+	@NamedQuery(
+		    name="findAllPersonShiftsForDateRange",
+		    query="SELECT a FROM ShiftAssignment a "
+		    		+ "INNER join a.person p "
+		    		+ "WHERE :start <= a.shiftDt AND :end >= a.shiftDt "
+		    		+ "AND a.activeInd = 'Y' "
+		    		+ "AND p.id = :personId"
+		)
+})
 
 @Entity
 @Table(name = "shift_assignment")
@@ -25,19 +51,18 @@ public class ShiftAssignment implements Serializable {
     @Column(name = "id")
     private Integer id;
 	
+	@JsonBackReference 
 	@ManyToOne
 	@JoinColumn(name = "person_id")
 	private Person person;
 	
+	@JsonBackReference 
 	@ManyToOne
 	@JoinColumn(name = "shift_id")
 	private Shift shift;
 	
-	@Column(name = "start_dt_tm", nullable = false) 
-    private Date startDtTm;
-	
-	@Column(name = "end_dt_tm", nullable = false) 
-    private Date endDtTm;
+	@Column(name = "shift_date", nullable = false) 
+    private Date shiftDt;
 	
 	@Column(name = "active_ind", length = 1, nullable = false)
     private String activeInd;
@@ -52,12 +77,30 @@ public class ShiftAssignment implements Serializable {
     public ShiftAssignment(){
     	
     }
+ 
+    public void convertFromDTO(ShiftAssignmentDTO dto){
+    	if(dto.getId() != null){
+    		this.setId(dto.getId());
+    	}
+    	Person p = new Person();
+    	p.setId(dto.getPersonId());
+    	this.setPerson(p);
+    	
+    	Shift s = new Shift();
+    	s.setId(dto.getShiftId());
+    	this.setShift(s);
+    	
+    	this.setShiftDt(dto.getShiftDt());
+    	this.setActiveInd(dto.getActiveInd());
+    	this.setActivityDtTm(dto.getActivityDtTm());
+    	this.setCreatedDtTm(dto.getCreatedDtTm());
+    }
     
 	@Override
 	public String toString(){
 		return ReflectionToStringBuilder.toString(this);
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -106,19 +149,12 @@ public class ShiftAssignment implements Serializable {
 		this.createdDtTm = createdDtTm;
 	}
 
-	public Date getStartDtTm() {
-		return startDtTm;
+	public Date getShiftDt() {
+		return shiftDt;
 	}
 
-	public void setStartDtTm(Date startDtTm) {
-		this.startDtTm = startDtTm;
+	public void setShiftDt(Date shiftDt) {
+		this.shiftDt = shiftDt;
 	}
 
-	public Date getEndDtTm() {
-		return endDtTm;
-	}
-
-	public void setEndDtTm(Date endDtTm) {
-		this.endDtTm = endDtTm;
-	}
 }

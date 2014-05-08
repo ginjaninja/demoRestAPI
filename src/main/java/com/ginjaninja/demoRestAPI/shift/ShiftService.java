@@ -42,19 +42,19 @@ public class ShiftService {
      * @return          {@link Shift}
      */
     public Shift save(Shift shift){
-        if(this.validMinMax(shift.getMinAssigned(), shift.getMaxAssigned())){
-	    	if(shift.getActiveInd() == null){
-	            shift.setActiveInd("Y");
-	        }
-	        if(shift.getMaxAssigned() == null){
-	        	shift.setMaxAssigned(1);
-	        }
-	        if(shift.getMinAssigned() == null){
-	        	shift.setMinAssigned(1);
-	        }
-	        if(shift.getCreatedDtTm() == null){
-	        	shift.setCreatedDtTm(new Date());
-	        }
+    	if(shift.getActiveInd() == null){
+	    	shift.setActiveInd("Y");
+	    }
+	    if(shift.getMaxAssigned() == null){
+	    	shift.setMaxAssigned(1);
+	    }
+	    if(shift.getMinAssigned() == null){
+	    	shift.setMinAssigned(1);
+	    }
+	    if(shift.getCreatedDtTm() == null){
+        	shift.setCreatedDtTm(new Date());
+        }
+	    if(this.validMinMax(shift.getMinAssigned(), shift.getMaxAssigned())){
 	        this.updateActivityDtTm(shift);
 	        return shiftDAO.save(shift);
         }else{
@@ -135,8 +135,8 @@ public class ShiftService {
      * @return		Boolean
      */
     private Boolean validMinMax(Integer min, Integer max){
-    	Boolean bool = true;
-    	if(min > max || max < min){
+    	Boolean bool = false;
+    	if(min <= max){
     		bool = false;
     	}
     	return bool;

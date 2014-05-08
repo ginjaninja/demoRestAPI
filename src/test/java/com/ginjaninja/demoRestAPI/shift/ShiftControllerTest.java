@@ -113,8 +113,8 @@ public class ShiftControllerTest extends WebAppConfigurationAware {
 	public void testUpdateConflict() throws JsonProcessingException, Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode shiftJSON = mapper.createObjectNode();
-		shiftJSON.put("id", "3");
-		shiftJSON.put("min_assigned", "3");
+		shiftJSON.put("id", "2");
+		shiftJSON.put("minAssigned", "4");
 		
 		MvcResult result = mockMvc.perform(put("/shift")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +129,7 @@ public class ShiftControllerTest extends WebAppConfigurationAware {
 	
 	@Test
 	public void testDelete() throws JsonProcessingException, Exception {
-		MvcResult result = mockMvc.perform(delete("/shift/3"))
+		MvcResult result = mockMvc.perform(delete("/shift/7"))
 			.andDo(print())
 			.andExpect(status().isOk())
 		    .andReturn();

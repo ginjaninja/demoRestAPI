@@ -7,16 +7,16 @@ import java.util.Collection;
  * Class to store ArrayList<Shift> so it can be used with Message or accepted by controller.
  *
  */
-public class Shifts extends ArrayList<Shift>{
+public class ShiftList extends ArrayList<Shift>{
 
-	public Shifts(){
+	public ShiftList(){
 		super();
 	}
 	
 	/**
 	 * Convert from Collection<Person> (ie DAO return object)
 	 */
-	public Shifts(Collection<Shift> cShift){
+	public ShiftList(Collection<Shift> cShift){
 		this.addAll(cShift);
 	}
 }

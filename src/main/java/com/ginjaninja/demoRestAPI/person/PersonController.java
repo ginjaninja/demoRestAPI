@@ -32,7 +32,7 @@ public class PersonController extends ControllerExceptionHandler implements Cont
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Message> getAll(){
-		People people = new People(personService.getAll());
+		PeopleList people = new PeopleList(personService.getAll());
 		Message message = new Message(Message.Type.SUCCESS, "OK", people);
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 		
@@ -144,8 +144,5 @@ public class PersonController extends ControllerExceptionHandler implements Cont
 		Message message = new Message(Message.Type.ERROR, "Reqest method DELETE is not allowed at this address.");
 		return new ResponseEntity<Message>(message, HttpStatus.METHOD_NOT_ALLOWED);
 	}
-	
-	
-	
 	
 }
