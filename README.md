@@ -3,10 +3,10 @@
 This project demonstrates implementing a rest API in Java with Spring, Hibernate and MySQL.
 
 Uses:
-Spring    4.0.2.RELEASE
-Hibernate 4.3.2.Final
-MySQL     5.1.29
-Jackson   2.3.0
+- Spring    4.0.2.RELEASE
+- Hibernate 4.3.2.Final
+- MySQL     5.1.29
+- Jackson   2.3.0
 
 Project includes jUnit integration tests and a testData.sql file (demoRestAPI\src\test\resources) for testing.
 
