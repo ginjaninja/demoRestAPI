@@ -40,6 +40,9 @@ public class Person implements Serializable {
     @Column(name = "last_name", length = 30, nullable = false)
     private String lastName;
     
+    /**
+     * Whether person is active or not (can be put in trash without deleting permanently)
+     */
     @Column(name = "active_ind", length = 1, nullable = false)
     private String activeInd;
      

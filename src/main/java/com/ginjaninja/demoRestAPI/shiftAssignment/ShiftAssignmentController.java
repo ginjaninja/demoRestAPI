@@ -67,7 +67,7 @@ public class ShiftAssignmentController extends ControllerExceptionHandler {
 	
 
 	/**
-	 * Fetch all Shift Assignments for person for date range
+	 * Fetch all Shift Assignments for or shift person for date range
 	 * @param startDtTm	Date
 	 * @param endDtTm	Date
 	 * @return
