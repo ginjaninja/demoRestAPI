@@ -21,7 +21,8 @@ This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assi
 
 
 ####/shift
-- GET     /shift        Fetch all shifts
+- GET     /shift        
+- - Fetch all shifts
 - GET     /shift/1      Fetch shift with id of 1
 - POST    /shift        Save shift 
 - PUT     /shift        Update shift
@@ -39,18 +40,18 @@ This project has 3 objects: Person, Shift, and ShiftAssignment. Persons are assi
 - DELETE  /assign/1     Delete shift assignment with id of 1
 
 
-###Person
+####Person
 - firstName             First name of person (max 30)
 - lastName              Last name of person (max 30)
 - activeInd             Whether person is active (can deactivate instead of delete, default Y)
 
-###Shift
+####Shift
 - label                 Label for shift
 - minAssigned           Min assigned threshold (implied, not enforced, default 1)
 - maxAssigned           Max assigned threshold (enforced, default 1)
 - activeInd             Whether shift is active (can deactivate instead of delete, default Y)
 
-###ShiftAssignment
+####ShiftAssignment
 - personId              Id of person to assign to shift
 - shiftId               Id of shift to assign person to
 - shiftDt               Date of person/shift assignment
