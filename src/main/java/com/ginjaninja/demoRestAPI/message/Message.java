@@ -28,7 +28,7 @@ public class Message {
 	}
 	
 	/**
-     * Construct message with result object;
+     * Construct message without result object;
      * @param type Type
      * @param text String
      * @param result Serializable
